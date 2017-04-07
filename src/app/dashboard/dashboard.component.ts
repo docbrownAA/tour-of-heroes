@@ -16,12 +16,6 @@ export class DashboardComponent implements OnInit {
 	ngOnInit(): void {
 		this.heroService.getHeroes()
 			.then(x => this.heroes = x.slice(1, 5));
-		//var A = { 1,2,3,4,5};
-		var str = "102";
-
-		var numb = parseInt(str.split("").reverse().toString());
-
-		console.log(numb);
 	}
 	goBack(): void {
 		this.location.back();

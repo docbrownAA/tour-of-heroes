@@ -9,11 +9,11 @@ import { Hero } from '../hero/Hero';
 
 @Injectable()
 export class HeroSearchService {
-	private heroesUrl = "localhost:8088/heroes";
+	private heroesUrl = "http://localhost:8088/heroes";
   constructor(private http: Http) { }
   search(term:string):Observable<Hero[]>{
 	  return this.http
 		  .get(`${this.heroesUrl}/?name=${term}`)
-		  .map(response => response.json().data as Hero[]);
+		  .map(response => response.json() as Hero[]);
   }
 }

@@ -8,27 +8,34 @@ import { Hero } from "./Hero";
 
 @Injectable()
 export class HeroService {
-	private heroesUrl = "localhost:8088/heroes"; // l'url de l'api web
-	private headers = new Headers({ 'Content-type': 'application/json' });
+	private heroesUrl = "http://localhost:8088/heroes"; // l'url de l'api web
+	private headers = new Headers();
 
 
-	constructor(private http: Http) { }
-	
+
+
+	constructor(private http: Http) {
+		this.headers.append('Content-type', 'application/json');
+		this.headers.append('Access-Control-Allow-Origin', 'http://localhost:4200');
+
+
+	}
+
 	getHeroes(): Promise<Hero[]> {
 		return this.http.get(this.heroesUrl)
 			.toPromise()
-			.then(response => response.json().data as Hero[])
+			.then(response => response.json() as Hero[])
 			.catch(this.handleErrors);
 	}
 	getHero(id: number): Promise<Hero> {
 		const url = `${this.heroesUrl}/${id}`;
 		return this.http.get(url)
 			.toPromise()
-			.then(response => response.json().data as Hero)
+			.then(response => response.json() as Hero)
 			.catch(this.handleErrors);
 	}
 
-	update(hero:Hero):Promise<Hero>{
+	update(hero: Hero): Promise<Hero> {
 		const url = `${this.heroesUrl}/${hero.id}`;
 		return this.http
 			.put(url, JSON.stringify(hero), { headers: this.headers })
@@ -37,24 +44,25 @@ export class HeroService {
 			.catch(this.handleErrors);
 	}
 
-	create(name: string):Promise<Hero>{
+	create(name: string): Promise<Hero> {
+		console.log(JSON.stringify({ name: name }));
 		return this.http
 			.post(this.heroesUrl, JSON.stringify({ name: name }), { headers: this.headers })
 			.toPromise()
-			.then(res => res.json().data as Hero)
+			.then(res => res.json() as Hero)
 			.catch(this.handleErrors);
 	}
 
-	delete(id:number):Promise<void>{
+	delete(id: number): Promise<void> {
 		const url = `${this.heroesUrl}/${id}`;
 		return this.http
-			.delete(url, {headers:this.headers})
+			.delete(url, { headers: this.headers })
 			.toPromise()
 			.then(() => null)
 			.catch(this.handleErrors);
 	}
 
-	private handleErrors(error:any):Promise<any>{
+	private handleErrors(error: any): Promise<any> {
 		console.error('Une erreur est survenue: ', error);
 		return Promise.reject(error.message || error);
 	}
