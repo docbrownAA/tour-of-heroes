@@ -16,9 +16,6 @@ export class HeroService {
 
 	constructor(private http: Http) {
 		this.headers.append('Content-type', 'application/json');
-		this.headers.append('Access-Control-Allow-Origin', 'http://localhost:4200');
-
-
 	}
 
 	getHeroes(): Promise<Hero[]> {
@@ -45,7 +42,6 @@ export class HeroService {
 	}
 
 	create(name: string): Promise<Hero> {
-		console.log(JSON.stringify({ name: name }));
 		return this.http
 			.post(this.heroesUrl, JSON.stringify({ name: name }), { headers: this.headers })
 			.toPromise()
